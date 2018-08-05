@@ -13,10 +13,12 @@ IoTHubReaderClient.prototype.stopReadMessage = function() {
 // Read device-to-cloud messages from IoT Hub.
 IoTHubReaderClient.prototype.startReadMessage = function(cb) {
   var self = this;
+  var consumerGroup = this.consumerGroupName;
   var printError = function(err) {
     console.error(err.message || err);
   };
   var deviceId = process.env['Azure.IoT.IoTHub.DeviceId'];
+
 
   EventHubClient.createFromIotHubConnectionString(this.connectionString).then((client) => {
     console.log("Successully created the EventHub Client from iothub connection string.");
@@ -32,7 +34,7 @@ IoTHubReaderClient.prototype.startReadMessage = function(cb) {
       cb(message.body, Date.parse(message.enqueuedTimeUtc));
     };
     return ids.map(function (id) {
-      return self.iotHubClient.receive(id, onMessageHandler, printError, { eventPosition: EventPosition.fromEnqueuedTime(Date.now()) });
+      return self.iotHubClient.receive(id, onMessageHandler, printError, { consumerGroup:consumerGroup, eventPosition: EventPosition.fromEnqueuedTime(Date.now()) });
     });
   }).catch(printError);
 
