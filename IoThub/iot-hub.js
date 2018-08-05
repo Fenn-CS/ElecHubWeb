@@ -19,7 +19,6 @@ IoTHubReaderClient.prototype.startReadMessage = function(cb) {
   };
   var deviceId = process.env['Azure.IoT.IoTHub.DeviceId'];
 
-
   EventHubClient.createFromIotHubConnectionString(this.connectionString).then((client) => {
     console.log("Successully created the EventHub Client from iothub connection string.");
     self.iotHubClient = client;
